@@ -20,4 +20,9 @@ public class DocController {
     public ResponseEntity<Doc> captureDoc(@RequestBody Doc doc, DocType docType){
         return docService.captureDoc(doc, docType);
     }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Doc> deleteDoc(String documentNo){
+        return docService.deleteDocument(documentNo);
+    }
 }

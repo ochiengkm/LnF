@@ -19,6 +19,7 @@ public class DocService {
                 doc.setDocumentNo(doc.getDocumentNo());
                 doc.setDOB(doc.getDOB());
                 doc.setDocumentType(String.valueOf(docType));
+                doc.setDescription(doc.getDescription());
 
                 response.setEntity(docRepository.save(doc));
                 response.setStatusCode(201);
@@ -48,6 +49,24 @@ public class DocService {
                 response.setMessage("Document not found");
                 response.setStatusCode(404);
                 response.setEntity(null);
+            }
+        } catch (Exception e) {
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+    public ResponseEntity<Doc> deleteDocument(String documentNo) {
+        ResponseEntity<Doc> response = new ResponseEntity<>();
+        Optional<Doc> doc = docRepository.findByDocumentNo(documentNo);
+        try {
+            if (doc.isPresent()) {
+                docRepository.delete(doc.get());
+                response.setMessage("Document deleted");
+                response.setStatusCode(200);
+            } else {
+                response.setMessage("Document not found");
+                response.setStatusCode(404);
             }
         } catch (Exception e) {
             response.setMessage(e.getMessage());

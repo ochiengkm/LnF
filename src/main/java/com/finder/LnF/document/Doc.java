@@ -19,4 +19,6 @@ public class Doc {
     private String documentType;
     private String documentNo;
     private int DOB;
+    private String description;
+//    private Boolean isDeleted = false;
 }
