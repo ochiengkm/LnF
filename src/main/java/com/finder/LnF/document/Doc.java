@@ -1,24 +1,40 @@
 package com.finder.LnF.document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.finder.LnF.location.LocationDetails;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "documents")
+@Table(name = "doc")
 public class Doc {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-    private String documentType;
+    private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private DocType documentType;
+
+    @Column(name = "document_no", nullable = false)
     private String documentNo;
-    private int DOB;
+
+    @Column(name = "dob", nullable = false)
+    private LocalDate dob;
+
+    @Column(name = "official_document_names", nullable = false)
+    private String officialDocumentNames;
+
+    @Column(name = "description", nullable = true)
     private String description;
-//    private Boolean isDeleted = false;
+
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id", nullable = true)
+    private LocationDetails locationDetails;
 }

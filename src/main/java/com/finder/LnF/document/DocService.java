@@ -12,29 +12,37 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DocService {
     private final DocRepository docRepository;
-    public ResponseEntity<Doc> captureDoc(Doc doc, DocType docType) {
+
+    public ResponseEntity<Doc> captureDoc(DocDTO docRequest, DocType docType) {
         ResponseEntity<Doc> response = new ResponseEntity<>();
         try {
-            if (docRepository.findByDocumentNo(doc.getDocumentNo()).isEmpty()) {
-                doc.setDocumentNo(doc.getDocumentNo());
-                doc.setDOB(doc.getDOB());
-                doc.setDocumentType(String.valueOf(docType));
-                doc.setDescription(doc.getDescription());
+            if (docRepository.findByDocumentNo(docRequest.getDocumentNo()).isEmpty()) {
+                Doc doc =  Doc.builder()
+                        .documentType(docType)
+                        .documentNo(docRequest.getDocumentNo())
+                        .dob(docRequest.getDob())
+                        .officialDocumentNames(docRequest.getOfficialDocumentNames())
+                        .description(docRequest.getDescription())
+                        .build();
 
                 response.setEntity(docRepository.save(doc));
                 response.setStatusCode(201);
                 response.setMessage("Successfully captured document " + doc.getDocumentNo());
             } else{
                 log.warn("Document already exists");
-                response.setMessage("Document already exists");
-                response.setStatusCode(500);
+                response.setMessage("Document already exists!");
+                response.setStatusCode(400);
                 response.setEntity(null);
             }
         } catch (Exception e) {
             log.error("Error capturing Doc", e);
+            response.setStatusCode(500);
         }
         return response;
     }
+
+
+
 
     public ResponseEntity<Doc> findDocument(DocType docType, String documentNo) {
         ResponseEntity<Doc> response = new ResponseEntity<>();

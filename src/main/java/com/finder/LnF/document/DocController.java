@@ -17,11 +17,11 @@ public class DocController {
     }
 
     @PostMapping("/capture") //Capture Document
-    public ResponseEntity<Doc> captureDoc(@RequestBody Doc doc, DocType docType){
+    public ResponseEntity<Doc> captureDoc(@RequestBody DocDTO doc, DocType docType){
         return docService.captureDoc(doc, docType);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete") //Delete the Document from LnF
     public ResponseEntity<Doc> deleteDoc(String documentNo){
         return docService.deleteDocument(documentNo);
     }
