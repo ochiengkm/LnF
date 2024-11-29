@@ -2,6 +2,7 @@ package com.finder.LnF.location;
 
 import com.finder.LnF.document.DocRepository;
 import com.finder.LnF.utils.ResponseEntity;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,12 +16,21 @@ import java.util.NoSuchElementException;
 public class LocationService {
     private final LocationRepository locationRepository;
     private final DocRepository docRepository;
+    private final EntityManager entityManager;
 
     @Transactional
     public ResponseEntity<?> setDocumentLocation(String documentNo, LocationDTO locationReq){
         ResponseEntity<?> response = new ResponseEntity<>();
         var document = docRepository.findByDocumentNo(documentNo).orElseThrow(
                 ()-> new NoSuchElementException("Please Capture the Document Details first!"));
+
+        LocationDetails oldLocationDetails = document.getLocationDetails();
+        if (oldLocationDetails != null){
+            document.setLocationDetails(null);
+            docRepository.save(document);
+            entityManager.detach(document);
+            locationRepository.delete(oldLocationDetails);
+        }
 
         LocationDetails details =  LocationDetails.builder()
                 .county(locationReq.getCounty())
