@@ -11,5 +11,5 @@ public interface DocRepository extends JpaRepository<Doc, Long> {
     @Query(value = "SELECT d FROM Doc d WHERE d.documentNo = :documentNo")
     Optional<Doc>findByDocumentNo(@Param("documentNo") String documentNo);
 
-    Optional<Doc>findByDocumentTypeAndDocumentNo(String documentType, String documentNo);
+    Optional<Doc>findByDocumentTypeAndDocumentNo(DocType documentType, String documentNo);
 }

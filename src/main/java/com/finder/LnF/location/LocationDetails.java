@@ -1,5 +1,6 @@
 package com.finder.LnF.location;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.finder.LnF.document.Doc;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "location")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class LocationDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

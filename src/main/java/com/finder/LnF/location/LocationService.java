@@ -1,6 +1,7 @@
 package com.finder.LnF.location;
 
 import com.finder.LnF.document.DocRepository;
+import com.finder.LnF.document.DocType;
 import com.finder.LnF.utils.ResponseEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
@@ -50,6 +51,24 @@ public class LocationService {
             throw new RuntimeException("Location could not be saved", e);
         }
 
+        return response;
+    }
+
+    public ResponseEntity<?> findDocumentLocation(DocType docType, String documentNo){
+        ResponseEntity<LocationDetails> response = new ResponseEntity<>();
+        var document = docRepository.findByDocumentTypeAndDocumentNo(docType, documentNo).orElseThrow(
+                ()-> new NoSuchElementException("Document not found!"));
+        if (document.getLocationDetails() != null){
+            LocationDetails locationDetails = document.getLocationDetails();
+            response.setEntity(locationDetails);
+            response.setStatusCode(200);
+            response.setMessage("Location Retrieved Successfully");
+        }
+        else {
+            response.setStatusCode(404);
+            response.setMessage("Location Details Not Found");
+            response.setEntity(null);
+        }
         return response;
     }
 }

@@ -1,11 +1,9 @@
 package com.finder.LnF.location;
 
+import com.finder.LnF.document.DocType;
 import com.finder.LnF.utils.ResponseEntity;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/document")
@@ -14,8 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class LocationController {
     private final LocationService locationService;
 
-    @PostMapping("/location")
+    @PostMapping("/set-location")
     public ResponseEntity<?> setDocumentLocation(String documentNo, LocationDTO location) {
         return locationService.setDocumentLocation(documentNo, location);
+    }
+
+    @PatchMapping("/update-location")
+    public ResponseEntity<?> updateDocumentLocation(String documentNo, LocationDTO location) {
+        return locationService.setDocumentLocation(documentNo, location);
+    }
+
+    @GetMapping("/find-location")
+    public ResponseEntity<?> getDocumentLocation(DocType docType, String documentNo) {
+        return locationService.findDocumentLocation(docType, documentNo);
     }
 }

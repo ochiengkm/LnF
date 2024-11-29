@@ -46,15 +46,16 @@ public class DocService {
 
     public ResponseEntity<Doc> findDocument(DocType docType, String documentNo) {
         ResponseEntity<Doc> response = new ResponseEntity<>();
-        Optional<Doc> doc = docRepository.findByDocumentTypeAndDocumentNo(docType.toString(), documentNo);
+        Optional<Doc> doc = docRepository.findByDocumentTypeAndDocumentNo(docType, documentNo);
         try {
             if (doc.isPresent()) {
-                response.setMessage("Document found");
+                String document = docType.toString().replace("_", " ");
+                response.setMessage(document + " Number: " + doc.get().getDocumentNo() + " found");
                 response.setStatusCode(200);
                 response.setEntity(doc.get());
             }
             else {
-                response.setMessage("Document not found");
+                response.setMessage("Document Number: " + documentNo + " not found");
                 response.setStatusCode(404);
                 response.setEntity(null);
             }
