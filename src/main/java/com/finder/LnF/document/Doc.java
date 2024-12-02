@@ -1,6 +1,7 @@
 package com.finder.LnF.document;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.finder.LnF.contact.Contact;
 import com.finder.LnF.location.LocationDetails;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,4 +38,8 @@ public class Doc {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = true)
     private LocationDetails locationDetails;
+
+    @OneToOne(mappedBy = "doc", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Contact contact;
+
 }
