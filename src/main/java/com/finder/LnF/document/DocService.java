@@ -1,5 +1,7 @@
 package com.finder.LnF.document;
 
+import com.finder.LnF.location.LocationDetails;
+import com.finder.LnF.location.LocationRepository;
 import com.finder.LnF.utils.ResponseEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DocService {
     private final DocRepository docRepository;
+    private final LocationRepository locationRepository;
 
     public ResponseEntity<Doc> captureDoc(DocDTO docRequest, DocType docType) {
         ResponseEntity<Doc> response = new ResponseEntity<>();
@@ -70,6 +73,11 @@ public class DocService {
         Optional<Doc> doc = docRepository.findByDocumentNo(documentNo);
         try {
             if (doc.isPresent()) {
+                LocationDetails location = doc.get().getLocationDetails();
+
+                if (location != null) {
+                    locationRepository.delete(location);
+                }
                 docRepository.delete(doc.get());
                 response.setMessage("Document deleted");
                 response.setStatusCode(200);
