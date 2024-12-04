@@ -32,6 +32,6 @@ build/
 ### VS Code ###
 .vscode/
 
-src/main/resources/application.properties
+#src/main/resources/application.properties
 qodana.yaml
 src/test/resources/application-test.properties
