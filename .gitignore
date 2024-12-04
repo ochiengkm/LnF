@@ -34,3 +34,4 @@ build/
 
 src/main/resources/application.properties
 qodana.yaml
+src/test/resources/application-test.properties
