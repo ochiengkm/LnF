@@ -97,7 +97,8 @@ public class DocService {
 
         try {
             if (doc.isPresent()) {
-                Doc updatedDoc = Doc.builder()
+                var updatedDoc = doc.get();
+                updatedDoc = Doc.builder()
                         .documentNo(docDTO.getDocumentNo())
                         .dob(docDTO.getDob())
                         .officialDocumentNames(docDTO.getOfficialDocumentNames())
