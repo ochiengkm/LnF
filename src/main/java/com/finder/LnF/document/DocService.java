@@ -90,4 +90,31 @@ public class DocService {
         }
         return response;
     }
+
+    public ResponseEntity<Doc> updateDocument(DocDTO docDTO, String documentNo){
+        ResponseEntity<Doc> response = new ResponseEntity<>();
+        Optional<Doc> doc = docRepository.findByDocumentNo(documentNo);
+
+        try {
+            if (doc.isPresent()) {
+                Doc updatedDoc = Doc.builder()
+                        .documentNo(docDTO.getDocumentNo())
+                        .dob(docDTO.getDob())
+                        .officialDocumentNames(docDTO.getOfficialDocumentNames())
+                        .description(docDTO.getDescription())
+                        .build();
+
+                docRepository.save(updatedDoc);
+                response.setMessage("Document details updated successfully");
+                response.setStatusCode(200);
+            }
+            else {
+                response.setMessage("Document Does not exist");
+                response.setStatusCode(400);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return response;
+    }
 }

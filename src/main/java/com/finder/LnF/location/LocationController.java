@@ -13,17 +13,17 @@ public class LocationController {
     private final LocationService locationService;
 
     @PostMapping("/set-location")
-    public ResponseEntity<?> setDocumentLocation(String documentNo, LocationDTO location) {
+    public ResponseEntity<?> setDocumentLocation(@RequestParam String documentNo, @RequestBody LocationDTO location) {
         return locationService.setDocumentLocation(documentNo, location);
     }
 
     @PatchMapping("/update-location")
-    public ResponseEntity<?> updateDocumentLocation(String documentNo, LocationDTO location) {
+    public ResponseEntity<?> updateDocumentLocation(@RequestParam String documentNo, @RequestBody LocationDTO location) {
         return locationService.setDocumentLocation(documentNo, location);
     }
 
     @GetMapping("/find-location")
-    public ResponseEntity<?> getDocumentLocation(DocType docType, String documentNo) {
+    public ResponseEntity<?> getDocumentLocation(@RequestParam DocType docType, @RequestParam String documentNo) {
         return locationService.findDocumentLocation(docType, documentNo);
     }
 }
