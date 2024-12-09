@@ -1,4 +1,4 @@
-package com.finder.LnF.auth;
+package com.finder.LnF.user;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -20,8 +22,11 @@ public class User {
     private Long id;
 
     @Column(name = "user_name", nullable = false, length = 10)
-    private String userName;
+    private String username;
 
     @Column(name = "dob", nullable = false)
-    private LocalDate dob;
+    private String password;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles = new ArrayList<>();
 }
