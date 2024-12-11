@@ -19,13 +19,18 @@ public class AuthController {
         return authService.login(authRequest);
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/user/signup")
     public User registerUser(@RequestBody AuthRequest authRequest) {
         return userService.registerUser(authRequest);
     }
 
-    @DeleteMapping("/delete-user")
+    @DeleteMapping("/user/self-delete")
     public ResponseEntity<?> deleteUser(String username){
         return userService.deleteUser(username);
+    }
+
+    @PostMapping("/admin/register")
+    public User registerAdmin(@RequestBody AuthRequest authRequest) {
+        return userService.registerAdmin(authRequest);
     }
 }

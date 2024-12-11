@@ -29,6 +29,7 @@ public class UserService implements UserDetailsService {
         User user = new User();
         user.setUsername(authRequest.getUsername());
         user.setPassword(passwordEncoder.encode(authRequest.getPassword()));
+        user.setUserType("USER");
         return userRepository.save(user);
     }
 
@@ -40,8 +41,19 @@ public class UserService implements UserDetailsService {
     public ResponseEntity<?> deleteUser(String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
                 ()-> new NoSuchElementException("User not found"));
+        if (user.getUserType().equals("USER")) {
 
-        userRepository.delete(user);
-        return new ResponseEntity<>(HttpStatus.OK);
+            userRepository.delete(user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    public User registerAdmin(AuthRequest authRequest) {
+        User user = new User();
+        user.setUsername(authRequest.getUsername());
+        user.setPassword(passwordEncoder.encode(authRequest.getPassword()));
+        user.setUserType("ADMIN");
+        return userRepository.save(user);
     }
 }

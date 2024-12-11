@@ -31,6 +31,9 @@ public class User implements UserDetails {
     @Column(name = "dob", nullable = false)
     private String password;
 
+    @Column(name = "user_type")
+    private String userType;
+
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
