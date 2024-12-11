@@ -44,7 +44,7 @@ public class UserService implements UserDetailsService {
         } else {
             return ResponseEntity.builder()
                     .message("Username already exists, choose another one")
-                    .statusCode(HttpStatus.BAD_GATEWAY.value())
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
                     .entity(null).build();
         }
     }
@@ -67,12 +67,27 @@ public class UserService implements UserDetailsService {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    public User registerAdmin(AuthRequest authRequest) {
-        User user = new User();
-        user.setUsername(authRequest.getUsername());
-        user.setPassword(passwordEncoder.encode(authRequest.getPassword()));
-        user.setUserType("ADMIN");
-        return userRepository.save(user);
+    public ResponseEntity<?> registerAdmin(AuthRequest authRequest) {
+
+        String username = authRequest.getUsername();
+        if (userRepository.findByUsername(username).isEmpty()) {
+
+            User user = new User();
+            user.setUsername(authRequest.getUsername());
+            user.setPassword(passwordEncoder.encode(authRequest.getPassword()));
+            user.setUserType("ADMIN");
+            userRepository.save(user);
+
+            return ResponseEntity.builder()
+                    .message("Admin Created Successfully!")
+                    .statusCode(HttpStatus.CREATED.value())
+                    .entity(user).build();
+        } else {
+            return ResponseEntity.builder()
+                    .message("Username already taken, choose a different one")
+                    .statusCode(HttpStatus.BAD_REQUEST.value())
+                    .entity(null).build();
+        }
     }
 
     public ResponseEntity<?> adminDeleteUser(String username) {

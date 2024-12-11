@@ -1,6 +1,5 @@
 package com.finder.LnF.auth;
 
-import com.finder.LnF.user.User;
 import com.finder.LnF.user.UserService;
 import com.finder.LnF.utils.ResponseEntity;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/admin/register")
-    public User registerAdmin(@RequestBody AuthRequest authRequest) {
+    public ResponseEntity<?> registerAdmin(@RequestBody AuthRequest authRequest) {
         return userService.registerAdmin(authRequest);
     }
 
