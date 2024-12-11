@@ -25,12 +25,17 @@ public class AuthController {
     }
 
     @DeleteMapping("/user/self-delete")
-    public ResponseEntity<?> deleteUser(String username){
+    public ResponseEntity<?> deleteUser(@RequestParam String username){
         return userService.deleteUser(username);
     }
 
     @PostMapping("/admin/register")
     public User registerAdmin(@RequestBody AuthRequest authRequest) {
         return userService.registerAdmin(authRequest);
+    }
+
+    @DeleteMapping("/admin/delete-user")
+    public ResponseEntity<?> adminDeleteUser(@RequestParam String username) {
+        return userService.adminDeleteUser(username);
     }
 }

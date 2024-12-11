@@ -60,4 +60,22 @@ public class UserService implements UserDetailsService {
         user.setUserType("ADMIN");
         return userRepository.save(user);
     }
+
+    public ResponseEntity<?> adminDeleteUser(String username) {
+        ResponseEntity<?> response = new ResponseEntity<>();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String principal = (String) authentication.getPrincipal();
+
+        User user = userRepository.findByUsername(username).orElseThrow(
+                ()-> new NoSuchElementException("User not found"));
+
+        if (!user.getUserType().equals("ADMIN") && !user.getUsername().equals(principal)) {
+            userRepository.delete(user);
+            response.setMessage("User has been deleted");
+        }else {
+            response.setMessage("User cannot be deleted");
+        }
+        return response;
+    }
 }
