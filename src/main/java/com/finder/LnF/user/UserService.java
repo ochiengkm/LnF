@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,9 +41,11 @@ public class UserService implements UserDetailsService {
     }
 
     public ResponseEntity<?> deleteUser(String username) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String principal = (String) authentication.getPrincipal();
         User user = userRepository.findByUsername(username).orElseThrow(
                 ()-> new NoSuchElementException("User not found"));
-        if (user.getUserType().equals("USER")) {
+        if (user.getUserType().equals("USER") && user.getUsername().equals(principal)) {
 
             userRepository.delete(user);
             return new ResponseEntity<>(HttpStatus.OK);
