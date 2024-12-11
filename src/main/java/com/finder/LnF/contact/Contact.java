@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "contact")
-public class Contact {
+public class
+
+Contact {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

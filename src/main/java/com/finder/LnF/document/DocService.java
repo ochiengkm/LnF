@@ -97,7 +97,7 @@ public class DocService {
         return response;
     }
 
-    public ResponseEntity<Doc> updateDocument(DocDTO docDTO, String documentNo){
+    public ResponseEntity<Doc> updateDocument(DocDTO docDTO, String documentNo){// Was not Updating properly
         ResponseEntity<Doc> response = new ResponseEntity<>();
         Optional<Doc> doc = docRepository.findByDocumentNo(documentNo);
 
