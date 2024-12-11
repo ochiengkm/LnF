@@ -5,6 +5,8 @@ import com.finder.LnF.location.LocationRepository;
 import com.finder.LnF.utils.ResponseEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -17,6 +19,9 @@ public class DocService {
     private final LocationRepository locationRepository;
 
     public ResponseEntity<Doc> captureDoc(DocDTO docRequest, DocType docType) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = (String) authentication.getPrincipal();
+
         ResponseEntity<Doc> response = new ResponseEntity<>();
         try {
             if (docRepository.findByDocumentNo(docRequest.getDocumentNo()).isEmpty()) {
@@ -26,6 +31,7 @@ public class DocService {
                         .dob(docRequest.getDob())
                         .officialDocumentNames(docRequest.getOfficialDocumentNames())
                         .description(docRequest.getDescription())
+                        .uploadedBy(username)
                         .build();
 
                 response.setEntity(docRepository.save(doc));

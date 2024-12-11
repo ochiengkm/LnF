@@ -34,6 +34,9 @@ public class Doc {
     @Column(name = "description", nullable = true)
     private String description;
 
+    @Column(name = "uploaded_by")
+    private String uploadedBy;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = true)

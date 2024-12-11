@@ -23,4 +23,9 @@ public class AuthController {
     public User registerUser(@RequestBody AuthRequest authRequest) {
         return userService.registerUser(authRequest);
     }
+
+    @DeleteMapping("/delete-user")
+    public ResponseEntity<?> deleteUser(String username){
+        return userService.deleteUser(username);
+    }
 }
