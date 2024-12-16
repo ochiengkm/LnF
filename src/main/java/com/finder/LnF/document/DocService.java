@@ -1,14 +1,21 @@
 package com.finder.LnF.document;
 
+import com.finder.LnF.contact.ContactRepository;
 import com.finder.LnF.location.LocationDetails;
 import com.finder.LnF.location.LocationRepository;
+import com.finder.LnF.mailService.EmailService;
 import com.finder.LnF.utils.ResponseEntity;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
+import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -17,10 +24,17 @@ import java.util.Optional;
 public class DocService {
     private final DocRepository docRepository;
     private final LocationRepository locationRepository;
+    private final EmailService emailService;
+    private final ContactRepository contactRepository;
 
     public ResponseEntity<Doc> captureDoc(DocDTO docRequest, DocType docType) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = (String) authentication.getPrincipal();
+
+        String username;
+        try {
+            username = getPrincipal();
+        } catch (AccessDeniedException e) {
+            throw new RuntimeException(e);
+        }
 
         ResponseEntity<Doc> response = new ResponseEntity<>();
         try {
@@ -123,5 +137,39 @@ public class DocService {
             throw new RuntimeException(e);
         }
         return response;
+    }
+
+    public ResponseEntity<?> requestDocument(LocalDate dob) throws MessagingException {
+
+        String userId;
+        try {
+            userId = getPrincipal();
+        } catch (AccessDeniedException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        var contactDetails = contactRepository.findByUsername(userId).orElse(null);
+        String email = Objects.requireNonNull(contactDetails).getEmail();
+
+        var doc = docRepository.findDocByDob(dob).filter(document
+                -> document.getContact().equals(contactDetails)).orElse(null);
+        if (doc != null) {
+            return emailService.sendFoundEmail(email);
+        }
+        else {
+            return ResponseEntity.builder()
+                    .statusCode(HttpStatus.NOT_FOUND.value())
+                    .message("Try again some time later, doc not found.")
+                    .build();
+        }
+    }
+
+    private String getPrincipal() throws AccessDeniedException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (Objects.isNull(authentication) || !authentication.isAuthenticated()) {
+            throw new AccessDeniedException("Kindly login first");
+        }
+        return authentication.getName();
     }
 }

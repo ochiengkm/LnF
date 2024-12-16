@@ -1,8 +1,11 @@
 package com.finder.LnF.document;
 
 import com.finder.LnF.utils.ResponseEntity;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/document")
@@ -25,6 +28,12 @@ public class DocController {
     public ResponseEntity<Doc> deleteDoc(@RequestParam String documentNo){
         return docService.deleteDocument(documentNo);
     }
+
+    @GetMapping("/request")
+    public ResponseEntity<?> requestDoc(@RequestParam LocalDate dob) throws MessagingException {
+        return docService.requestDocument(dob);
+    }
+
 
 //    @PatchMapping("/update-details")
 //    public ResponseEntity<Doc> updateDoc(@RequestBody DocDTO doc, @RequestParam String documentNo){

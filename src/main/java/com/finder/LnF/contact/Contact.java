@@ -24,6 +24,9 @@ Contact {
     @Column(name = "name")
     private String fullName;
 
+    @Column(name = "user_name")
+    private String username;
+
     @Column(name = "phone", nullable = false)
     private String phoneNumber;
 
